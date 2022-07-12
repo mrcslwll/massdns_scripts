@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+
+import sys
+import os 
+
+wordlist = sys.argv[1]
+file_output = sys.argv[2]
+
+os.system('massdns -r ~/Downloads/massdns/lists/resolvers.txt -t AAAA ' + wordlist + ' -o S > resolve_results.txt')
+
+results = open('resolve_results.txt', 'r')
+results = results.readlines()
+final_results = open(file_output, 'w')
+
+for line in results:
+	if ". CNAME " in line:
+		final_results.writelines(line.split(". CNAME ")[0]+'\n')
+	if ". AAAA " in line:
+		final_results.writelines(line.split(". AAAA ")[0]+'\n')
+
+
+os.system('rm resolve_results.txt')
+
+
